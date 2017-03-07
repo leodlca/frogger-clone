@@ -110,11 +110,11 @@ var Engine = (function(global) {
 
         var rowImages = [
                 'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/stone-block.png',   // Row 1 of 4 of stone
+                'images/stone-block.png',   // Row 2 of 4 of stone
+                'images/stone-block.png',   // Row 3 of 4 of stone
+                'images/stone-block.png',   // Row 4 of 4 of stone
+                'images/grass-block.png'    // Row 1 of 1 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -137,11 +137,16 @@ var Engine = (function(global) {
             }
         }
 
+        /*   This draws Wins, Record and HP items to the canvas  */
         ctx.font = "30px Impact";
         ctx.fillStyle = "white";
         ctx.strokeStyle = "black";
-        ctx.strokeText("Wins: " + player.win_count + "  Losses: " + player.loss_count, 285, 80); 
-        ctx.fillText("Wins: " + player.win_count + "  Losses: " + player.loss_count, 285, 80);
+        ctx.strokeText("Wins: " + player.win_count, 5, 80); 
+        ctx.fillText("Wins: " + player.win_count, 5, 80);
+        ctx.strokeText("Record: " + player.record, 190, 80);
+        ctx.fillText("Record: " + player.record, 190, 80);
+        ctx.strokeText("HP: " + player.lives_count, 440, 80);
+        ctx.fillText("HP: " + player.lives_count, 440, 80);
 
         renderEntities();
     }
