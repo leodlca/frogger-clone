@@ -1,6 +1,32 @@
-frontend-nanodegree-arcade-game
+#Frogger clone
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+This project was initiaded as a part of a Nanodegree program.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+Some of its contents such as all the images belongs to Udacity.
+
+##How to play
+
+You control a boy who needs to reach the river without being hit by the bugs. 
+
+You can move him by pressing the direction arrow keys of your keyboard, or using WASD.
+
+At first you have 3 lives, everytime a bug hits you, you lose
+a life.
+
+The main objective is to get to the river as many times as you
+can, if you die, don't worry, your record will be kept.
+
+**But beware, if you refresh the page, quit, or anything like
+it, your score will be lost (that's temporary, I'm planning to add a feature to keep track of the scores permanently).**
+
+##How to setup
+
+For now, I'm not hosting this game so you have to either clone
+the repository or download it as a zip file, extract it and 
+open the index.html file.
+
+##To-do List
+
+- This list is empty for now because I'm busy, but I have plans
+- to expand the game
