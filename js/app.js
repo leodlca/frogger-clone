@@ -70,15 +70,15 @@ Player.prototype.reset = function() {
 // array, allEnemies. 
 Player.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
-        if (player.y === enemy.y) {
-            if (enemy.x >= player.x - 50 && enemy.x <= player.x + 50) {
+        if (this.y === enemy.y) {
+            if (enemy.x >= this.x - 50 && enemy.x <= this.x + 50) {
                 // Checks if the player is at least 50 pixels to the left
                 // or to the right, from the enemy.
-                player.lose_life();
-                player.reset();
+                this.lose_life();
+                this.reset();
             }
         }
-    });
+    }.bind(this));
 };
 
 // Renders player's sprite
@@ -88,22 +88,24 @@ Player.prototype.render = function() {
 
 // Moves the player according to the key the user presses.
 Player.prototype.handleInput = function(allowedKeys) {
+    var move_x = 100;
+    var move_y = 85;
     switch (allowedKeys) {
         case 'left':
             if (this.x < 100) break;
-            this.x -= 100;
+            this.x -= move_x;
             break;
         case 'right':
             if (this.x > 300) break;
-            this.x += 100;
+            this.x += move_x;
             break;
         case 'up':
             if (this.y < 20) break;
-            this.y -= 85;
+            this.y -= move_y;
             break;
         case 'down':
             if (this.y > 370) break;
-            this.y += 85;
+            this.y += move_y;
     }
 };
 
