@@ -69,12 +69,10 @@ var Engine = (function(global) {
         } else if (!player.pause && !player.p_dead && !player.p_dead && player.initial){
             update(dt);
             render();
-            ctx.strokeText("Game Paused", 165, 300); 
-            ctx.fillText("Game Paused", 165, 300);
-            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
-            ctx.fillText("Press P to (Un)Pause", 130, 350);
-            ctx.strokeText("Press M to Mute", 150, 400); 
-            ctx.fillText("Press M to Mute", 150, 400);
+            ctx.strokeText("Press P to (Un)Pause", 130, 300); 
+            ctx.fillText("Press P to (Un)Pause", 130, 300);
+            ctx.strokeText("Press M to Mute", 150, 350); 
+            ctx.fillText("Press M to Mute", 150, 350);
         }
 
         /* Set our lastTime variable which is used to determine the time delta

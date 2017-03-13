@@ -120,20 +120,19 @@ Player.prototype.handleInput = function(allowedKeys) {
     var move_y = 85;
     switch (allowedKeys) {
         case 'left':
-            if (this.x < 100) break;
+            if (this.x < 100 || this.pause || this.p_dead || this.p_dead_master) break;
             this.x -= move_x;
             break;
         case 'right':
-            this.pause = false;
-            if (this.x > 300) break;
+            if (this.x > 300 || this.pause || this.p_dead || this.p_dead_master) break;
             this.x += move_x;
             break;
         case 'up':
-            if (this.y < 20) break;
+            if (this.y < 20 || this.pause || this.p_dead || this.p_dead_master) break;
             this.y -= move_y;
             break;
         case 'down':
-            if (this.y > 370) break;
+            if (this.y > 370 || this.pause || this.p_dead || this.p_dead_master) break;
             this.y += move_y;
             break;
         case 'mute':
