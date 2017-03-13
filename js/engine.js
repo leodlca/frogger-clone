@@ -14,6 +14,8 @@
  * a little simpler to work with.
  */
 
+
+
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -29,6 +31,8 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+    
+
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -38,15 +42,40 @@ var Engine = (function(global) {
          * instructions at different speeds we need a constant value that
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
-         */
+         */ 
+
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
-         */
-        update(dt);
-        render();
+        // Pauses Menu when certain conditions are satisfied and paint text to the canvas
+        // Or keep running the game
+        // TODO: GamePause is redundant, split code.
+        if (!player.pause && !player.p_dead_master && !player.p_dead && !player.initial){
+            update(dt);
+            render();
+        } else if (player.p_dead_master && !player.pause && !player.p_dead && !player.initial) {
+            ctx.font = "500px Impact";
+            ctx.fillStyle = "red";
+            ctx.strokeStyle = "red";
+            ctx.strokeText("X", 150,515); 
+            ctx.fillText("X", 150,515);
+        } else if (player.pause && !player.p_dead && !player.p_dead && !player.initial){
+            ctx.strokeText("Game Paused", 165, 300); 
+            ctx.fillText("Game Paused", 165, 300);
+            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
+            ctx.fillText("Press P to (Un)Pause", 130, 350);
+            ctx.strokeText("Press M to Mute", 150, 400); 
+            ctx.fillText("Press M to Mute", 150, 400);
+        } else if (!player.pause && !player.p_dead && !player.p_dead && player.initial){
+            update(dt);
+            render();
+            ctx.strokeText("Game Paused", 165, 300); 
+            ctx.fillText("Game Paused", 165, 300);
+            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
+            ctx.fillText("Press P to (Un)Pause", 130, 350);
+            ctx.strokeText("Press M to Mute", 150, 400); 
+            ctx.fillText("Press M to Mute", 150, 400);
+        }
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -138,6 +167,7 @@ var Engine = (function(global) {
         }
 
         /*   This draws Wins, Record and HP items to the canvas  */
+
         ctx.font = "30px Impact";
         ctx.fillStyle = "white";
         ctx.strokeStyle = "black";
@@ -145,8 +175,18 @@ var Engine = (function(global) {
         ctx.fillText("Wins: " + player.win_count, 5, 80);
         ctx.strokeText("Record: " + player.record, 190, 80);
         ctx.fillText("Record: " + player.record, 190, 80);
-        ctx.strokeText("HP: " + player.lives_count, 440, 80);
-        ctx.fillText("HP: " + player.lives_count, 440, 80);
+        ctx.strokeText("HP: " + player.lives_count, 430,80);
+        ctx.fillText("HP: " + player.lives_count, 430, 80);
+        
+
+        var drawPause = function(){
+            ctx.strokeText("Game Paused", 165, 300); 
+            ctx.fillText("Game Paused", 165, 300);
+            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
+            ctx.fillText("Press P to (Un)Pause", 130, 350);
+            ctx.strokeText("Press M to Mute", 150, 400); 
+            ctx.fillText("Press M to Mute", 150, 400);
+        }
 
         renderEntities();
     }
@@ -171,7 +211,10 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        player.initial = true;
+        setTimeout(function(){
+            player.initial = false;
+        }, 2500);
     }
 
     /* Go ahead and load all of the images we know we're going to need to

@@ -7,6 +7,9 @@ Some of its contents such as all the images belongs to Udacity.
 
 ##How to play
 
+P - Pause Menu
+M - Mute
+
 You control a boy who needs to reach the river without being hit by the bugs. 
 
 You can move him by pressing the direction arrow keys of your keyboard, or using WASD.
@@ -25,6 +28,16 @@ it, your score will be lost (that's temporary, I'm planning to add a feature to 
 For now, I'm not hosting this game so you have to either clone
 the repository or download it as a zip file, extract it and 
 open the index.html file.
+
+##Changelog
+
+1. v1.0
+	- Added pause function.
+	- Added sounds (bg music, hit, lose and win).
+	- Added delay when you hit a bug, so it's harder to lose control and hit it twice accidentaly.
+	- Added mute function.
+	- Added an "animation" for when the player runs out of HP.
+	- Fixed font incompatibility on linux.
 
 ##To-do List
 

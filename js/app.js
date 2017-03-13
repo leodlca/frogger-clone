@@ -1,3 +1,19 @@
+/*    Sounds     */
+
+var win = new Audio("sound/win.ogg");
+win.volume = 0.3;
+
+var hit = new Audio("sound/hit.ogg");
+hit.volume = 0.3;
+
+var background = new Audio("sound/background.ogg");
+background.volume = 0.3;
+
+var fail = new Audio("sound/fail.ogg");
+fail.volume = 0.5;
+
+var mute = false;
+
 /*    Enemies Section    */
 
 // Defines enemy's position (X,Y), its speed and sprite.      
@@ -38,9 +54,14 @@ Enemy.prototype.reset = function(y_pos, speed) {
 
 /*    Player Section     */
 
+// TODO: Move all of the game functionality to a new object Game.
+
 // Defines player's position (X,Y), its win counter, life (HP) counter,
 // record and sprite.
 var Player = function() {
+    this.p_dead = false; // Bool to know if the player has been hit by a bug (HP>0)
+    this.pause = false; // Bool to know if the player has pressed pause
+    this.p_dead_master = false; // Bool to know if the player has more than 0 HP
     this.y = 400;
     this.x = 200;
     this.win_count = 0;
@@ -53,9 +74,12 @@ var Player = function() {
 // its position, and secondly, checking if it has reached the water blocks
 // so it calls the reset and win functions.
 Player.prototype.update = function() {
+    background.play(); 
     this.collision();
     if (this.y < 60) {
+        setTimeout(3000);
         this.reset();
+        win.play();
         this.win();
     }
 };
@@ -64,7 +88,9 @@ Player.prototype.update = function() {
 Player.prototype.reset = function() {
     this.y = 400;
     this.x = 200;
+
 };
+
 
 // Checks for collision with an enemy by looping through all the enemy's
 // array, allEnemies. 
@@ -74,6 +100,7 @@ Player.prototype.collision = function() {
             if (enemy.x >= this.x - 50 && enemy.x <= this.x + 50) {
                 // Checks if the player is at least 50 pixels to the left
                 // or to the right, from the enemy.
+                hit.play(); // Plays hit.ogg (audio)
                 this.lose_life();
                 this.reset();
             }
@@ -87,6 +114,7 @@ Player.prototype.render = function() {
 };
 
 // Moves the player according to the key the user presses.
+// Acess Pause Menu when P is pressed and Mutes all sounds when M is pressed.
 Player.prototype.handleInput = function(allowedKeys) {
     var move_x = 100;
     var move_y = 85;
@@ -96,6 +124,7 @@ Player.prototype.handleInput = function(allowedKeys) {
             this.x -= move_x;
             break;
         case 'right':
+            this.pause = false;
             if (this.x > 300) break;
             this.x += move_x;
             break;
@@ -106,6 +135,24 @@ Player.prototype.handleInput = function(allowedKeys) {
         case 'down':
             if (this.y > 370) break;
             this.y += move_y;
+            break;
+        case 'mute':
+            if (mute) {
+                background.volume = 0.3;
+                mute = false;
+            } else {
+                background.volume = 0;
+                mute = true;
+            }
+            break;
+        case 'pause':
+            if (this.pause) {
+                this.pause = false;
+            } else {
+                this.pause = true;
+            }
+
+
     }
 };
 
@@ -126,15 +173,29 @@ Player.prototype.lose_life = function() {
     if (this.lives_count <= 0) {
         // If the lives count reaches 0, it calls master reset.
         this.master_reset();
+        return;
     }
+    this.p_dead = true;
+    setTimeout(function() {
+        player.p_dead = false;
+    }, 200);
 };
 
 // Resets player's position by calling reset, and set lives and 
 // win count values to 3 and 0.
 Player.prototype.master_reset = function() {
-    this.reset();
     this.lives_count = 3;
     this.win_count = 0;
+
+    // Pauses everything for 1,5s and plays fail.ogg
+
+    this.p_dead_master = true;
+    background.pause();
+    fail.play();
+    setTimeout(function() {
+        player.p_dead_master = false;
+    }, 1500);
+    this.reset();
 };
 
 /*     (Random) Arrays    */
@@ -174,14 +235,17 @@ var player = new Player();
 // Player.handleInput() method. It takes 8 different keys.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
-        37: 'left',   // Left arrow
-        38: 'up',     // Up arrow
-        39: 'right',  // Right arrow
-        40: 'down',   // Down arrow
-        87: 'up',     // W
-        83: 'down',   // S
-        68: 'right',  // A
-        65: 'left'    // D
+        37: 'left', // Left arrow
+        38: 'up', // Up arrow
+        39: 'right', // Right arrow
+        40: 'down', // Down arrow
+        87: 'up', // W
+        83: 'down', // S
+        68: 'right', // A
+        65: 'left', // D
+        77: 'mute', // M
+        80: 'pause' // P
+
     };
 
     player.handleInput(allowedKeys[e.keyCode]);

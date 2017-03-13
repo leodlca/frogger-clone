@@ -1,3 +1,15 @@
+/*@font-face {src: url('https://fonts.googleapis.com/css?family=Luckiest+Guy');}*/
+
 body {
     text-align: center;
+    background-color: grey;
 }
+
+canvas {
+            font-family: 'Impact'; //necessary
+        }
+        
+        @font-face {
+            font-family: 'Impact'; 
+            src: url('font/Impact.ttf');
+            }
