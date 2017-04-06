@@ -1,11 +1,11 @@
-#Frogger clone
+# Frogger Clone
 ===============================
 
 This project was initiaded as a part of a Nanodegree program.
 
 Some of its contents such as all the images belongs to Udacity.
 
-##How to play
+## How to play
 
 P - Pause Menu
 M - Mute
@@ -23,13 +23,12 @@ can, if you die, don't worry, your record will be kept.
 **But beware, if you refresh the page, quit, or anything like
 it, your score will be lost (that's temporary, I'm planning to add a feature to keep track of the scores permanently).**
 
-##How to setup
+## How to setup
 
-For now, I'm not hosting this game so you have to either clone
-the repository or download it as a zip file, extract it and 
-open the index.html file.
+You can play by simply visiting this [link.](https://leodlca.github.io/frogger-clone)
+or clone/download the repository and open index.html.
 
-##Changelog
+## Changelog
 
 1. v1.0
 	- Added pause function.
