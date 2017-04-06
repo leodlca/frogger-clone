@@ -1,5 +1,4 @@
 # Frogger Clone
-===============================
 
 This project was initiaded as a part of a Nanodegree program.
 
