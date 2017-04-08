@@ -22,10 +22,10 @@ var Game = {
 
 /*   Set sound volume   */
 
-Game.sounds.win.volume = 0.3;
-Game.sounds.hit.volume = 0.3;
+Game.sounds.win.volume = 0.4;
+Game.sounds.hit.volume = 0.2;
 Game.sounds.fail.volume = 0.3;
-Game.sounds.background.volume = 0.08;
+Game.sounds.background.volume = 0.125;
 
 /*    Enemies Section    */
 
@@ -235,7 +235,9 @@ Player.prototype.masterReset = function() {
     Game.sounds.fail.play();
     setTimeout(function() {
         player.dead = false;
-        Game.sounds.background.play();
+        if (!Game.sounds.mute){
+            Game.sounds.background.play();
+        }
     }, 1500);
     this.resetPosition();
 };
