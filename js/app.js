@@ -1,22 +1,36 @@
-/*    Sounds     */
+/*    Game Object    */
 
-var win = new Audio("sound/win.ogg");
-win.volume = 0.3;
+var Game = {
+    sounds: {
 
-var hit = new Audio("sound/hit.ogg");
-hit.volume = 0.3;
+        // Every audio related to the game is declared here.
 
-var background = new Audio("sound/background.ogg");
-background.volume = 0.3;
+        win: new Audio("sound/win.ogg"),
+        hit: new Audio("sound/hit.ogg"),
+        fail: new Audio("sound/fail.ogg"),
+        background: new Audio("sound/background.ogg"),
 
-var fail = new Audio("sound/fail.ogg");
-fail.volume = 0.5;
+        // Mute is a boolean that tells if the game is currently muted.
 
-var mute = false;
+        mute: false
+    },
+
+    // Pause is a boolean that tells if the game is currently paused.
+
+    paused: false
+}
+
+/*   Set sound volume   */
+
+Game.sounds.win.volume = 0.3;
+Game.sounds.hit.volume = 0.3;
+Game.sounds.fail.volume = 0.3;
+Game.sounds.background.volume = 0.08;
 
 /*    Enemies Section    */
 
-// Defines enemy's position (X,Y), its speed and sprite.      
+// Defines enemy's position (X,Y), its speed and sprite.    
+
 var Enemy = function(y_pos, speed) {
     this.x = -100;
     this.y = y_pos;
@@ -26,26 +40,33 @@ var Enemy = function(y_pos, speed) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
+
 Enemy.prototype.update = function(dt) {
+
     // The speed is multiplied by the dt parameter so it will
     // ensure that the game runs at the same speed for all
     // computers.
+
     this.x += this.speed * dt;
     if (this.x > 550) {
+
         // Resets enemy's position if it goes out of the screen
         // by selecting a random number for its Y position and
         // speed.
+
         this.reset(enemy_y[Math.floor(Math.random() * 4)],
             enemy_speed[Math.floor(Math.random() * 3)]);
     }
 };
 
 // Draw the enemy on the screen, required method for game
+
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Resets enemy to its original position, called by this.update
+
 Enemy.prototype.reset = function(y_pos, speed) {
     this.y = y_pos;
     this.x = -100;
@@ -54,14 +75,14 @@ Enemy.prototype.reset = function(y_pos, speed) {
 
 /*    Player Section     */
 
-// TODO: Move all of the game functionality to a new object Game.
-
 // Defines player's position (X,Y), its win counter, life (HP) counter,
 // record and sprite.
+
 var Player = function() {
-    this.p_dead = false; // Bool to know if the player has been hit by a bug (HP>0)
-    this.pause = false; // Bool to know if the player has pressed pause
-    this.p_dead_master = false; // Bool to know if the player has more than 0 HP
+
+    // Those are the initial player's values.
+
+    this.dead = false; // Boolean to know if the player has been hit by a bug
     this.y = 400;
     this.x = 200;
     this.win_count = 0;
@@ -73,19 +94,19 @@ var Player = function() {
 // Updates player's position by first, checking if there's any enemy at
 // its position, and secondly, checking if it has reached the water blocks
 // so it calls the reset and win functions.
-Player.prototype.update = function() {
-    background.play(); 
+
+Player.prototype.update = function() { 
     this.collision();
     if (this.y < 60) {
         setTimeout(3000);
-        this.reset();
-        win.play();
+        this.resetPosition();
+        Game.sounds.win.play();
         this.win();
     }
 };
 
 // Resets player to its original position.
-Player.prototype.reset = function() {
+Player.prototype.resetPosition = function() {
     this.y = 400;
     this.x = 200;
 
@@ -98,114 +119,138 @@ Player.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
         if (this.y === enemy.y) {
             if (enemy.x >= this.x - 50 && enemy.x <= this.x + 50) {
+
                 // Checks if the player is at least 50 pixels to the left
                 // or to the right, from the enemy.
-                hit.play(); // Plays hit.ogg (audio)
-                this.lose_life();
-                this.reset();
+                
+                Game.sounds.hit.play(); // Plays hit.ogg (audio)
+                this.loseLife();
+                this.resetPosition();
             }
         }
     }.bind(this));
 };
 
 // Renders player's sprite
+
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Moves the player according to the key the user presses.
 // Acess Pause Menu when P is pressed and Mutes all sounds when M is pressed.
+
 Player.prototype.handleInput = function(allowedKeys) {
     var move_x = 100;
     var move_y = 85;
     switch (allowedKeys) {
+
+        // Handles with player's movement keys
+
         case 'left':
-            if (this.x < 100 || this.pause || this.p_dead || this.p_dead_master) break;
+            if (this.x < 100 || Game.paused || this.dead) break;
             this.x -= move_x;
             break;
         case 'right':
-            if (this.x > 300 || this.pause || this.p_dead || this.p_dead_master) break;
+            if (this.x > 300 || Game.paused || this.dead) break;
             this.x += move_x;
             break;
         case 'up':
-            if (this.y < 20 || this.pause || this.p_dead || this.p_dead_master) break;
+            if (this.y < 20 || Game.paused || this.dead) break;
             this.y -= move_y;
             break;
         case 'down':
-            if (this.y > 370 || this.pause || this.p_dead || this.p_dead_master) break;
+            if (this.y > 370 || Game.paused || this.dead) break;
             this.y += move_y;
             break;
+
+        // Handles with game functions such as mute and pause.
+
         case 'mute':
-            if (mute) {
-                background.volume = 0.3;
-                mute = false;
+            if (Game.sounds.mute) {
+                Game.sounds.background.play();
+                Game.sounds.mute = false;
             } else {
-                background.volume = 0;
-                mute = true;
+                Game.sounds.background.pause();
+                Game.sounds.mute = true;
             }
             break;
         case 'pause':
-            if (this.pause) {
-                this.pause = false;
+            if (Game.paused) {
+                Game.paused = false;
             } else {
-                this.pause = true;
+                Game.paused = true;
             }
-
-
+            break;
+        default:
+            break;
     }
 };
 
 // It's called when the player reaches the water blocks,
 // it adds 1 to the win counter.
+
 Player.prototype.win = function() {
     this.win_count += 1;
     if (this.win_count > this.record) {
+
         // Checks if the current win count is bigger than
         // the record count, if it is, the record is replaced.
+
         this.record = this.win_count;
     }
 };
 
 // Subtracts one from the players lives.
-Player.prototype.lose_life = function() {
+
+Player.prototype.loseLife = function() {
     this.lives_count -= 1;
     if (this.lives_count <= 0) {
+
         // If the lives count reaches 0, it calls master reset.
-        this.master_reset();
+
+        this.masterReset();
         return;
     }
-    this.p_dead = true;
+
+    // Pauses the game for 0,2s when the player dies.
+
+    Game.paused = true;
     setTimeout(function() {
-        player.p_dead = false;
+        Game.paused = false;
     }, 200);
 };
 
 // Resets player's position by calling reset, and set lives and 
 // win count values to 3 and 0.
-Player.prototype.master_reset = function() {
+
+Player.prototype.masterReset = function() {
     this.lives_count = 3;
     this.win_count = 0;
+    this.dead = true;
 
     // Pauses everything for 1,5s and plays fail.ogg
 
-    this.p_dead_master = true;
-    background.pause();
-    fail.play();
+    Game.sounds.background.pause();
+    Game.sounds.fail.play();
     setTimeout(function() {
-        player.p_dead_master = false;
+        player.dead = false;
+        Game.sounds.background.play();
     }, 1500);
-    this.reset();
+    this.resetPosition();
 };
 
 /*     (Random) Arrays    */
 
 // An array with 4 different possible pos Y values to spawn
 // or respawn an enemy.
+
 var enemy_y = [315, 230, 145, 60];
 
 // An array with 3 different possible speed values to spawn
 // or respawn an enemy.
-var enemy_speed = [350, 500, 550];
+
+var enemy_speed = [350, 475, 550];
 
 /*    Calls enemies and player objects    */
 
@@ -224,14 +269,12 @@ var enemy_4 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
 var enemy_5 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
-
 var allEnemies = [enemy_1, enemy_2, enemy_3, enemy_4, enemy_5];
 var player = new Player();
 
-
-
 // This listens for key presses and sends the keys to 
-// Player.handleInput() method. It takes 8 different keys.
+// Player.handleInput() method. It takes 10 different keys.
+
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left', // Left arrow

@@ -48,31 +48,19 @@ var Engine = (function(global) {
             dt = (now - lastTime) / 1000.0;
 
         // Pauses Menu when certain conditions are satisfied and paint text to the canvas
-        // Or keep running the game
-        // TODO: GamePause is redundant, split code.
-        if (!player.pause && !player.p_dead_master && !player.p_dead && !player.initial){
+        // or keep running the game
+
+        if (!Game.paused && !player.dead){
             update(dt);
             render();
-        } else if (player.p_dead_master && !player.pause && !player.p_dead && !player.initial) {
+        } else if (Game.paused && !player.dead){
+            // Do nothing.
+        } else if (!Game.paused && player.dead) {
             ctx.font = "500px Impact";
             ctx.fillStyle = "red";
             ctx.strokeStyle = "red";
             ctx.strokeText("X", 150,515); 
             ctx.fillText("X", 150,515);
-        } else if (player.pause && !player.p_dead && !player.p_dead && !player.initial){
-            ctx.strokeText("Game Paused", 165, 300); 
-            ctx.fillText("Game Paused", 165, 300);
-            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
-            ctx.fillText("Press P to (Un)Pause", 130, 350);
-            ctx.strokeText("Press M to Mute", 150, 400); 
-            ctx.fillText("Press M to Mute", 150, 400);
-        } else if (!player.pause && !player.p_dead && !player.p_dead && player.initial){
-            update(dt);
-            render();
-            ctx.strokeText("Press P to (Un)Pause", 130, 300); 
-            ctx.fillText("Press P to (Un)Pause", 130, 300);
-            ctx.strokeText("Press M to Mute", 150, 350); 
-            ctx.fillText("Press M to Mute", 150, 350);
         }
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -107,7 +95,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -175,16 +162,6 @@ var Engine = (function(global) {
         ctx.fillText("Record: " + player.record, 190, 80);
         ctx.strokeText("HP: " + player.lives_count, 430,80);
         ctx.fillText("HP: " + player.lives_count, 430, 80);
-        
-
-        var drawPause = function(){
-            ctx.strokeText("Game Paused", 165, 300); 
-            ctx.fillText("Game Paused", 165, 300);
-            ctx.strokeText("Press P to (Un)Pause", 130, 350); 
-            ctx.fillText("Press P to (Un)Pause", 130, 350);
-            ctx.strokeText("Press M to Mute", 150, 400); 
-            ctx.fillText("Press M to Mute", 150, 400);
-        }
 
         renderEntities();
     }
@@ -209,10 +186,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        player.initial = true;
-        setTimeout(function(){
-            player.initial = false;
-        }, 2500);
+        Game.sounds.background.play();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
