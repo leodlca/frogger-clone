@@ -88,7 +88,7 @@ var Player = function() {
     this.win_count = 0;
     this.lives_count = 3;
     this.record = 0;
-    this.sprite = 'images/char-boy.png';
+    this.sprite = 'images/char-horn-girl.png';
 };
 
 // Updates player's position by first, checking if there's any enemy at
@@ -106,6 +106,7 @@ Player.prototype.update = function() {
 };
 
 // Resets player to its original position.
+
 Player.prototype.resetPosition = function() {
     this.y = 400;
     this.x = 200;
@@ -115,6 +116,7 @@ Player.prototype.resetPosition = function() {
 
 // Checks for collision with an enemy by looping through all the enemy's
 // array, allEnemies. 
+
 Player.prototype.collision = function() {
     allEnemies.forEach(function(enemy) {
         if (this.y === enemy.y) {
