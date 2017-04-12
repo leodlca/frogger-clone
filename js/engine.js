@@ -59,8 +59,8 @@ var Engine = (function(global) {
             ctx.font = "500px Impact";
             ctx.fillStyle = "red";
             ctx.strokeStyle = "red";
-            ctx.strokeText("X", 150,515); 
-            ctx.fillText("X", 150,515);
+            ctx.strokeText("X", 150, 515); 
+            ctx.fillText("X", 150, 515);
         }
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -79,9 +79,11 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
+        // reset();
         lastTime = Date.now();
         main();
+        Game.sounds.background.play();
+        Game.sounds.setVolume();
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -109,6 +111,9 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        if (!star.playerHasIt){
+            star.update();
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -124,11 +129,11 @@ var Engine = (function(global) {
 
         var rowImages = [
                 'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 4 of stone
-                'images/stone-block.png',   // Row 2 of 4 of stone
-                'images/stone-block.png',   // Row 3 of 4 of stone
-                'images/stone-block.png',   // Row 4 of 4 of stone
-                'images/grass-block.png'    // Row 1 of 1 of grass
+                'images/grass-block.png',   // Row 1 of 4 of grass
+                'images/grass-block.png',   // Row 2 of 4 of grass
+                'images/grass-block.png',   // Row 3 of 4 of grass
+                'images/grass-block.png',   // Row 4 of 4 of grass
+                'images/stone-block.png'    // Row 1 of 1 of stone
             ],
             numRows = 6,
             numCols = 5,
@@ -153,15 +158,7 @@ var Engine = (function(global) {
 
         /*   This draws Wins, Record and HP items to the canvas  */
 
-        ctx.font = "30px Impact";
-        ctx.fillStyle = "white";
-        ctx.strokeStyle = "black";
-        ctx.strokeText("Wins: " + player.win_count, 5, 80); 
-        ctx.fillText("Wins: " + player.win_count, 5, 80);
-        ctx.strokeText("Record: " + player.record, 190, 80);
-        ctx.fillText("Record: " + player.record, 190, 80);
-        ctx.strokeText("HP: " + player.lives_count, 430,80);
-        ctx.fillText("HP: " + player.lives_count, 430, 80);
+        Game.displayInfo();
 
         renderEntities();
     }
@@ -179,6 +176,12 @@ var Engine = (function(global) {
         });
 
         player.render();
+
+        /* The engine will not render the star if the player already has it. */
+
+        if (!star.playerHasIt){
+            star.render();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -186,7 +189,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        Game.sounds.background.play();
+        // For now, do nothing.
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -198,7 +201,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-horn-girl.png'
+        'images/char-horn-girl.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

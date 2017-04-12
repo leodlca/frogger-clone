@@ -12,24 +12,40 @@ var Game = {
 
         // Mute is a boolean that tells if the game is currently muted.
 
-        mute: false
+        mute: false,
+
+        // setVolume is called by init(), so it runs once, when the game starts.
+
+        setVolume: function(){
+            Game.sounds.win.volume = 0.4;
+            Game.sounds.hit.volume = 0.2;
+            Game.sounds.fail.volume = 0.3;
+            Game.sounds.background.volume = 0.125;
+        }
     },
 
     // Pause is a boolean that tells if the game is currently paused.
 
-    paused: false
-}
+    paused: false,
 
-/*   Set sound volume   */
+    // displayInfo() is called by main, so it's rendered continuously.
 
-Game.sounds.win.volume = 0.4;
-Game.sounds.hit.volume = 0.2;
-Game.sounds.fail.volume = 0.3;
-Game.sounds.background.volume = 0.125;
+    displayInfo: function(){
+        ctx.font = "33px Impact";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.strokeText("Wins: " + player.win_count, 5, 80); 
+        ctx.fillText("Wins: " + player.win_count, 5, 80);
+        ctx.strokeText("Record: " + player.record, 190, 80);
+        ctx.fillText("Record: " + player.record, 190, 80);
+        ctx.strokeText("HP: " + player.lives_count, 430, 80);
+        ctx.fillText("HP: " + player.lives_count, 430, 80);
+    }
+};
 
 /*    Enemies Section    */
 
-// Defines enemy's position (X,Y), its speed and sprite.    
+// Enemy "Class", Defines enemy's position (X,Y), its speed and sprite.    
 
 var Enemy = function(y_pos, speed) {
     this.x = -100;
@@ -54,7 +70,7 @@ Enemy.prototype.update = function(dt) {
         // by selecting a random number for its Y position and
         // speed.
 
-        this.reset(enemy_y[Math.floor(Math.random() * 4)],
+        this.reset(possible_y[Math.floor(Math.random() * 4)],
             enemy_speed[Math.floor(Math.random() * 3)]);
     }
 };
@@ -72,6 +88,40 @@ Enemy.prototype.reset = function(y_pos, speed) {
     this.x = -100;
     this.speed = speed;
 };
+
+/*    Items Section     */
+
+// Star "Class", takes as arguments its X and Y position.
+
+var Star = function(x_pos, y_pos) {
+    this.x = x_pos;
+    this.y = y_pos;
+    this.sprite = 'images/Star.png';
+
+    this.playerHasIt = false; // Let the game know if the user has picked up the star yet.
+};
+
+Star.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// If the player is in the same position as the star, playerHasIt is set to true.
+
+Star.prototype.update = function() {
+    if (player.x === this.x && player.y === this.y) {
+        this.playerHasIt = true;
+    }
+};
+
+// Reset the star global variable to a new Star object.
+
+Star.prototype.reset = function() {
+
+    // star IS INTENTIONALLY A GLOBAL VARIABLE, so it can be acessed by the engine.
+
+    star = new Star(possible_x[Math.floor(Math.random() * 4)],
+    possible_y[Math.floor(Math.random() * 4)]);
+}
 
 /*    Player Section     */
 
@@ -97,9 +147,12 @@ var Player = function() {
 
 Player.prototype.update = function() { 
     this.collision();
-    if (this.y < 60) {
-        setTimeout(3000);
+
+    // This condition is satisfied when player reaches the river (when the player wins).
+
+    if (this.y < 60 && star.playerHasIt) {
         this.resetPosition();
+        star.reset();
         Game.sounds.win.play();
         this.win();
     }
@@ -110,7 +163,6 @@ Player.prototype.update = function() {
 Player.prototype.resetPosition = function() {
     this.y = 400;
     this.x = 200;
-
 };
 
 
@@ -158,7 +210,8 @@ Player.prototype.handleInput = function(allowedKeys) {
             this.x += move_x;
             break;
         case 'up':
-            if (this.y < 20 || Game.paused || this.dead) break;
+            // If the player haven't picked up the star yet, he won't be able to reach the river.
+            if (this.y < 20 || Game.paused || this.dead || (this.y < 85 && !star.playerHasIt)) break;
             this.y -= move_y;
             break;
         case 'down':
@@ -239,42 +292,48 @@ Player.prototype.masterReset = function() {
         player.dead = false;
         if (!Game.sounds.mute){
             Game.sounds.background.play();
+            star.reset();
+            this.resetPosition();
         }
     }, 1500);
-    this.resetPosition();
+    
 };
 
 /*     (Random) Arrays    */
 
 // An array with 4 different possible pos Y values to spawn
-// or respawn an enemy.
+// or respawn items/enemies.
 
-var enemy_y = [315, 230, 145, 60];
+var possible_y = [315, 230, 145, 60];
+
+var possible_x = [0, 100, 200, 300, 400]
 
 // An array with 3 different possible speed values to spawn
 // or respawn an enemy.
 
-var enemy_speed = [350, 475, 550];
+var enemy_speed = [300, 450, 525];
 
 /*    Calls enemies and player objects    */
 
-var enemy_1 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
+var enemy_1 = new Enemy(possible_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
-var enemy_2 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
+var enemy_2 = new Enemy(possible_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
-var enemy_3 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
+var enemy_3 = new Enemy(possible_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
-var enemy_4 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
+var enemy_4 = new Enemy(possible_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
-var enemy_5 = new Enemy(enemy_y[Math.floor(Math.random() * 4)],
+var enemy_5 = new Enemy(possible_y[Math.floor(Math.random() * 4)],
     enemy_speed[Math.floor(Math.random() * 3)]);
 
 var allEnemies = [enemy_1, enemy_2, enemy_3, enemy_4, enemy_5];
 var player = new Player();
+var star = new Star(possible_x[Math.floor(Math.random() * 4)], 
+    possible_y[Math.floor(Math.random() * 4)]);
 
 // This listens for key presses and sends the keys to 
 // Player.handleInput() method. It takes 10 different keys.

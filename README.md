@@ -16,7 +16,7 @@ You can move him by pressing the direction arrow keys of your keyboard, or using
 At first you have 3 lives, everytime a bug hits you, you lose
 a life.
 
-The main objective is to get to the river as many times as you
+The main objective is to pick up the star and get to the river as many times as you
 can, if you die, don't worry, your record will be kept as long as you don't leave/refresh the page.
 
 ## How to setup
@@ -34,6 +34,12 @@ or clone/download the repository and open index.html.
 	- Added an "animation" for when the player runs out of HP.
 	- Fixed font incompatibility on linux.
 
+2. v1-beta-2.0
+	- Added Star, the game has a new objective.
+	- Changed main character.
+
 ## To-do List
 
-- Add different stages to the game, make it more complex and fun.
+- Add different stages to the game.
+- Add a sound when the player picks up the star.
+- Introduce Heart, so the player can get more lives.
