@@ -1,10 +1,10 @@
-# Frogger Clone
+## Frogger Clone
 
 This project was initiaded as a part of a Nanodegree program.
 
 Some of its contents such as all the images belongs to Udacity.
 
-## How to play
+### How to play
 
 - P - Pause
 - M - Mute
@@ -19,12 +19,20 @@ a life.
 The main objective is to pick up the star and get to the river as many times as you
 can, if you die, don't worry, your record will be kept as long as you don't leave/refresh the page.
 
-## How to setup
+### How to Install/Run the Project
 
-You can play by simply visiting this [link.](https://leodlca.github.io/frogger-clone)
-or clone/download the repository and open index.html.
+**NOTE**: You can also check out the app by simply clicking on this [link.](https://leodlca.github.io/portfolio)
 
-## Changelog
+1. Download the repository as a ZIP file, or clone it. ¹
+2. Navigate to the repository folder on Terminal/DOS.
+3. Run "python -m SimpleHTTPServer 8000" or "python2 -m SimpleHTTPServer 8000". ²
+4. Load the page at localhost:8000.
+
+**¹** If you don't want to run it in a local server, simply follow step one and open the index.html file at the repository folder.
+
+**²** You must have python installed in your machine in order to run these commands. Note that python is already installed by default on Unix-based systems such as Linux and Mac OS X.
+
+### Changelog
 
 1. v1.0
 	- Added pause function.
@@ -38,7 +46,7 @@ or clone/download the repository and open index.html.
 	- Added Star, the game has a new objective.
 	- Changed main character.
 
-## To-do List
+### To-do List
 
 - Add different stages to the game.
 - Add a sound when the player picks up the star.
