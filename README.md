@@ -49,6 +49,9 @@ can, if you die, don't worry, your record will be kept as long as you don't leav
 2. v1-beta-2.0
 	- Added Star, the game has a new objective.
 	- Changed main character.
+	
+3. v1-beta-2.1
+	- Updated the code according to ES6, using the class syntax.
 
 ---------------------------------
 ### To-do List
