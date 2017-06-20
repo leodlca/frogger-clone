@@ -14,13 +14,22 @@ var Game = {
 
         mute: false,
 
-        // setVolume is called by init(), so it runs once, when the game starts.
+        setMute: function() {
+        	Game.sounds.win.volume = 0;
+            Game.sounds.hit.volume = 0;
+            Game.sounds.fail.volume = 0;
+            Game.sounds.background.pause();
+        },
+
+        // setVolume is called by init(), so it runs once, when the game starts or when
+        // the game is unmuted.
 
         setVolume: function(){
             Game.sounds.win.volume = 0.4;
             Game.sounds.hit.volume = 0.2;
             Game.sounds.fail.volume = 0.3;
             Game.sounds.background.volume = 0.125;
+            Game.sounds.background.play();
         }
     },
 
@@ -108,8 +117,6 @@ var Star = class {
     }
 
     reset() {
-        // star IS INTENTIONALLY A GLOBAL VARIABLE, so it can be acessed by the engine.
-
         star = new Star(possible_x[Math.floor(Math.random() * 4)],
         possible_y[Math.floor(Math.random() * 4)]);
     }
@@ -195,10 +202,10 @@ var Player = class {
 
             case 'mute':
                 if (Game.sounds.mute) {
-                    Game.sounds.background.play();
+                    Game.sounds.setVolume();
                     Game.sounds.mute = false;
                 } else {
-                    Game.sounds.background.pause();
+                    Game.sounds.setMute();
                     Game.sounds.mute = true;
                 }
                 break;
